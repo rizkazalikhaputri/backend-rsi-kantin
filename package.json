@@ -15,9 +15,14 @@
     "nodemon": "^3.1.14"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
-    "mssql": "^12.7.2"
+    "jsonwebtoken": "^9.0.3",
+    "mssql": "^12.7.2",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
+    "zod": "^4.6.5"
   }
 }

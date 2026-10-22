@@ -1,0 +1,137 @@
+### 1. Register gagal (validasi)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{ "name": "ab", "email": "bukan-email", "password": "pendek" }
+
+### 2. Register berhasil
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{ "name": "Siti Aminah", "email": "siti@mail.com", "password": "rahasia123" }
+
+
+### 3. Login berhasil
+# @name login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "budi@mail.com", "password": "rahasia123" }
+
+### 4. Login password salah
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "budi@mail.com", "password": "salahsalah" }
+
+### 5. /auth/me tanpa token (harus 401)
+GET http://localhost:3000/auth/me
+
+### 6. /auth/me token ngawur (harus 401)
+GET http://localhost:3000/auth/me
+Authorization: Bearer token-ngawur
+
+### 7. /auth/me dengan token asli (harus 200)
+@token = {{login.response.body.data.token}}
+GET http://localhost:3000/auth/me
+Authorization: Bearer {{token}}
+
+### 8. Login admin
+# @name loginAdmin
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "admin@kantin.ac.id", "password": "Admin12345" }
+
+### 9. Login owner 1 (Budi)
+# @name loginOwner1
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "budi.santoso@kantin.ac.id", "password": "Owner12345" }
+
+### 10. Login owner 2 (Siti)
+# @name loginOwner2
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "siti.aminah@kantin.ac.id", "password": "Owner12345" }
+
+### 11. Login customer
+# @name loginCustomer
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "rizky.pratama@student.ac.id", "password": "Customer12345" }
+
+### Token (variabel)
+@tokenAdmin = {{loginAdmin.response.body.data.token}}
+@tokenOwner1 = {{loginOwner1.response.body.data.token}}
+@tokenOwner2 = {{loginOwner2.response.body.data.token}}
+@tokenCustomer = {{loginCustomer.response.body.data.token}}
+
+### 12. POST /stalls tanpa token (harus 401)
+POST http://localhost:3000/stalls
+Content-Type: application/json
+
+{ "name": "Warung Uji" }
+
+### 13. POST /stalls sebagai customer (harus 403)
+POST http://localhost:3000/stalls
+Content-Type: application/json
+Authorization: Bearer {{tokenCustomer}}
+
+{ "name": "Warung Uji" }
+
+### 14. POST /stalls sebagai owner, data salah (harus 400)
+POST http://localhost:3000/stalls
+Content-Type: application/json
+Authorization: Bearer {{tokenOwner1}}
+
+{ "name": "ab" }
+
+### 15. POST /stalls sebagai owner, data benar (harus 201)
+POST http://localhost:3000/stalls
+Content-Type: application/json
+Authorization: Bearer {{tokenOwner1}}
+
+{ "name": "Warung Uji Budi", "category": "Minuman", "location": "Kantin Lt 1" }
+
+### 16. Owner 1 (Budi) ubah warung milik Siti, id 2 (harus 403)
+PUT http://localhost:3000/stalls/2
+Content-Type: application/json
+Authorization: Bearer {{tokenOwner1}}
+
+{ "description": "Dicoba diubah orang lain" }
+
+### 17. Owner 1 (Budi) ubah warung miliknya sendiri, id 1 (harus 200)
+PUT http://localhost:3000/stalls/1
+Content-Type: application/json
+Authorization: Bearer {{tokenOwner1}}
+
+{ "description": "Diubah oleh pemiliknya" }
+
+### 18. Admin ubah warung id 2 (harus 200)
+PUT http://localhost:3000/stalls/2
+Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
+
+{ "description": "Diubah oleh admin" }
+
+### 19. Owner hapus warung (harus 403)
+DELETE http://localhost:3000/stalls/1
+Authorization: Bearer {{tokenOwner1}}
+
+### 20. Customer tambah review (harus 201)
+POST http://localhost:3000/stalls/4/reviews
+Content-Type: application/json
+Authorization: Bearer {{tokenCustomer}}
+
+{ "rating": 5, "comment": "Enak dan murah" }
+
+### 21. Review dengan rating teks (harus 400)
+POST http://localhost:3000/stalls/1/reviews
+Content-Type: application/json
+Authorization: Bearer {{tokenCustomer}}
+
+{ "rating": "5" }
