@@ -1,0 +1,7 @@
+PORT=3000
+DB_USER=backend_rsi_login
+DB_PASSWORD=@Rizkazalikha080607
+DB_SERVER=localhost
+DB_NAME=rsi_kantin_db
+
+JWT_SECRET=ganti_dengan_teks_acak_yang_panjang_123xyz
